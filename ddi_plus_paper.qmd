@@ -1,0 +1,36 @@
+---
+title: "DDI Plus"
+format:
+  html:
+    embed-resources: true
+execute:
+  echo: false
+  warning: false
+--- 
+
+```{python}
+import pandas as pd
+import pyddi
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+sns.set_theme(style="whitegrid", palette="husl")
+
+# load data
+data = pyddi.read_dump(cohort='ddi_plus', postprocess=False, printfile=True)
+data = data.query('included == True')
+data.loc[data['stag_text'] == 'NN', 'stag_text'] = 'MCI'
+total_subs = data['subject_label'].nunique()
+total_observations = len(data)
+gender_count = data.gender.value_counts()
+total_subs
+included_followups = data[(data['visit_id'] > 1) & (data['visit_id'].isin([1, 2, 3, 4, 5, 6]))]
+mean_years_followup, sd_years_followup = included_followups.years_from_baseline.mean(), included_followups.years_from_baseline.std()
+print('Icnluded subjects:', total_subs)
+print('Total observations:', total_observations)
+print(data.visit_id.value_counts())
+print(f'Mean followup years: {mean_years_followup} ({sd_years_followup})')
+print('Sum of followup years',included_followups['years_from_baseline'].sum())
+print('Total mean followup years (N_subjects * mean_years)',mean_years_followup * total_subs)
+
+```

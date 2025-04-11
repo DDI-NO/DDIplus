@@ -29,11 +29,74 @@ mean_years_followup, sd_years_followup = included_followups.years_from_baseline.
 print('Icnluded subjects:', total_subs)
 print('Total observations:', total_observations)
 print(data.visit_id.value_counts())
-print(f'Mean followup years: {mean_years_followup} ({sd_years_followup})')
+mean_str = f'Mean followup years: {mean_years_followup:.2f} ({sd_years_followup:.2f})'
+print(mean_str)
 print('Sum of followup years',included_followups['years_from_baseline'].sum())
 print('Total mean followup years (N_subjects * mean_years)',mean_years_followup * total_subs)
 
+mean_edu_years = data['edu_years'].mean()
+edu_years_sd = data['edu_years'].std()
+total_subs = data['subject_label'].nunique()
+
 baseline = data.query('visit_id == 1')
 first_followup = data.query('visit_id == 2')
+
+```
+
+```{python}
+fig, axes = plt.subplots(2, 2, figsize=(8, 8))
+fig.subplots_adjust(hspace=0.5)  # Increase the gap between rows
+# axes[1][1].axis('off')  # Deactivate the axes[1][1]
+pyddi.plot_countplot(
+    baseline,
+    variable='gender',
+    title=f'Subjects (N={len(baseline)})',
+    ax=axes[0][0],
+    show_percentage=False
+)
+
+pyddi.plot_countplot(
+    data,
+    variable='visit_id',
+    title='Assessments',
+    ax=axes[0][1],
+    show_percentage=False
+)
+
+axes[0][1].text(0.6, 0.30, mean_str, ha='center', va='center', transform=axes[0][1].transAxes)
+
+vilax = axes[1][0]
+sns.violinplot(
+    data=data[data['visit_id'] < 4], 
+    x="visit_id", 
+    y="available_age",
+    cut=0, 
+    split=True, 
+    inner="point", 
+    ax=vilax, 
+    hue='gender', 
+    palette="Set2", 
+    dodge=True,
+    )
+vilax.set_title('Age distribution')
+vilax.set_xlabel('Visit')
+vilax.set_ylabel('')
+
+vilax2 = axes[1][1]
+sns.violinplot(
+    data=data[data['visit_id'] < 4], 
+    x="gender", 
+    y="edu_years",
+    cut=0, 
+    split=True, 
+    inner="point", 
+    ax=vilax2, 
+    # hue='gender', 
+    palette="Set2", 
+    dodge=True,
+    )
+vilax2.set_title('Education distribution')
+vilax2.set_xlabel('Visit')
+vilax2.set_ylabel('')
 
 ```

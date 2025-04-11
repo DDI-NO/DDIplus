@@ -1,3 +1,5 @@
 *.png
 *_graph
 *.csv
+
+/.quarto/

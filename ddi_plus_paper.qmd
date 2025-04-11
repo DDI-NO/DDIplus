@@ -33,4 +33,7 @@ print(f'Mean followup years: {mean_years_followup} ({sd_years_followup})')
 print('Sum of followup years',included_followups['years_from_baseline'].sum())
 print('Total mean followup years (N_subjects * mean_years)',mean_years_followup * total_subs)
 
+baseline = data.query('visit_id == 1')
+first_followup = data.query('visit_id == 2')
+
 ```

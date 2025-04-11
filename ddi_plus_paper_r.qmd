@@ -1,0 +1,29 @@
+---
+title: "DDI Plus"
+format:
+  html:
+    embed-resources: true
+--- 
+
+
+```{r}
+# Load required packages
+if (!requireNamespace("ggplot2", quietly = TRUE)) {
+  install.packages("ggplot2")
+}
+if (!requireNamespace("dplyr", quietly = TRUE)) {
+  install.packages("dplyr")
+}
+if (!requireNamespace("tidyr", quietly = TRUE)) {
+  install.packages("tidyr")
+}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+clinical <- read.csv("/Users/freyta/Documents/Work/APGEM/data/exportado/ddi_plus_clinical_250401.csv")
+clinical <- clinical %>% filter(included == "True")
+dump_protocol <- clinical %>% filter(visit_id %in% c(1, 2, 3, 4, 5, 6))
+dump_baseline <- clinical %>% filter(visit_id == 1)
+
+```
